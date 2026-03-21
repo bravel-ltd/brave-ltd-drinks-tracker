@@ -220,19 +220,7 @@ tr:hover td{background:var(--cream)}
 .hamburger{display:none;position:fixed;top:14px;right:16px;z-index:200;background:var(--ink);color:#FFF;border:none;border-radius:8px;padding:8px 12px;font-size:18px;cursor:pointer}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
 
-/* ── PIN overlay ── */
-.pin-overlay{position:fixed;inset:0;background:var(--ink);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem}
-.pin-logo{font-size:48px}
-.pin-title{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:#FFF}
-.pin-sub{font-size:14px;color:rgba(255,255,255,.45)}
-.pin-dots{display:flex;gap:12px;margin:.5rem 0}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.3);transition:all .15s}
-.pin-dot.filled{background:var(--gold);border-color:var(--gold)}
-.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
-.pin-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#FFF;font-size:20px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
-.pin-btn:hover{background:rgba(255,255,255,.16)}
-.pin-btn:active{transform:scale(.93)}
-.pin-error{color:#ff6b6b;font-size:13px;min-height:18px}
+
 
 /* ── Report page ── */
 .period-tabs{display:flex;gap:6px;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:5px;border:1px solid var(--border)}
@@ -274,10 +262,7 @@ tr:hover td{background:var(--cream)}
 .sr-label{font-size:14px;font-weight:500}
 .sr-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .sr-action{flex-shrink:0;margin-left:1rem}
-.toggle{width:44px;height:24px;background:var(--border);border-radius:12px;cursor:pointer;position:relative;transition:background .2s;border:none}
-.toggle.on{background:var(--green)}
-.toggle::after{content:'';position:absolute;width:18px;height:18px;background:#FFF;border-radius:50%;top:3px;left:3px;transition:left .2s}
-.toggle.on::after{left:23px}
+
 
 @media(max-width:768px){@media(max-width:768px){
   .sidebar{transform:translateX(-100%);transition:transform .3s ease}
@@ -304,33 +289,6 @@ tr:hover td{background:var(--cream)}
 <button class="hamburger" onclick="toggleMenu()">☰</button>
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-<!-- ══════════════ PIN OVERLAY ══════════════ -->
-<div class="pin-overlay" id="pin-overlay" style="display:none">
-  <div class="pin-logo">🍺</div>
-  <div class="pin-title">Brave Ltd</div>
-  <div class="pin-sub" id="pin-sub">Enter your PIN</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="pd0"></div>
-    <div class="pin-dot" id="pd1"></div>
-    <div class="pin-dot" id="pd2"></div>
-    <div class="pin-dot" id="pd3"></div>
-  </div>
-  <div class="pin-error" id="pin-error"></div>
-  <div class="pin-pad">
-    <button class="pin-btn" onclick="pinPress('1')">1</button>
-    <button class="pin-btn" onclick="pinPress('2')">2</button>
-    <button class="pin-btn" onclick="pinPress('3')">3</button>
-    <button class="pin-btn" onclick="pinPress('4')">4</button>
-    <button class="pin-btn" onclick="pinPress('5')">5</button>
-    <button class="pin-btn" onclick="pinPress('6')">6</button>
-    <button class="pin-btn" onclick="pinPress('7')">7</button>
-    <button class="pin-btn" onclick="pinPress('8')">8</button>
-    <button class="pin-btn" onclick="pinPress('9')">9</button>
-    <button class="pin-btn" onclick="pinPress('del')" style="font-size:14px">⌫</button>
-    <button class="pin-btn" onclick="pinPress('0')">0</button>
-    <button class="pin-btn" onclick="pinPress('ok')" style="background:var(--gold);border-color:var(--gold);font-size:13px">OK</button>
-  </div>
-</div>
 
 <aside class="sidebar" id="sidebar">
   <div class="logo">
@@ -643,18 +601,7 @@ tr:hover td{background:var(--cream)}
     <div class="page-sub">Manage your data and app security</div>
   </div>
 
-  <!-- PIN Lock -->
-  <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:500;margin-bottom:.75rem">🔒 PIN Lock</div>
-  <div class="settings-section">
-    <div class="settings-row">
-      <div><div class="sr-label">Enable PIN Lock</div><div class="sr-sub">Require a 4-digit PIN to open the app</div></div>
-      <div class="sr-action"><button class="toggle" id="pin-toggle" onclick="togglePin()"></button></div>
-    </div>
-    <div class="settings-row" id="pin-change-row" style="display:none">
-      <div><div class="sr-label">Change PIN</div><div class="sr-sub">Set a new 4-digit PIN</div></div>
-      <div class="sr-action"><button class="btn-sm" onclick="startSetPin()">Change PIN</button></div>
-    </div>
-  </div>
+
 
   <!-- Backup -->
   <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:500;margin-bottom:.75rem;margin-top:1.5rem">💾 Backup & Restore</div>
@@ -719,7 +666,6 @@ txRef.on('value',snapshot=>{
         }
       }
     }catch(e){}
-    initPin();
     updateBrandSuggestions();
   }
   // Refresh active panel
@@ -1101,77 +1047,6 @@ function exportCSV(){
   a.download='BraveLtd_'+new Date().toISOString().split('T')[0]+'.csv';
   a.click();toast('✓ CSV exported');
 }
-// ─── PIN LOCK ─────────────────────────────────────────────────────────────────
-let pinBuffer='', pinMode='unlock', pinSetting='';
-function initPin(){
-  const stored=localStorage.getItem('brave_pin');
-  const enabled=localStorage.getItem('brave_pin_enabled')==='1';
-  if(enabled&&stored){
-    pinMode='unlock';
-    document.getElementById('pin-overlay').style.display='flex';
-    document.getElementById('pin-sub').textContent='Enter your PIN to continue';
-  }
-}
-function pinPress(v){
-  const errEl=document.getElementById('pin-error');
-  errEl.textContent='';
-  if(v==='del'){pinBuffer=pinBuffer.slice(0,-1);}
-  else if(v==='ok'){
-    if(pinBuffer.length<4){errEl.textContent='Please enter 4 digits';return;}
-    if(pinMode==='unlock'){
-      if(pinBuffer===localStorage.getItem('brave_pin')){
-        document.getElementById('pin-overlay').style.display='none';
-        pinBuffer='';updatePinDots();
-      } else {pinBuffer='';updatePinDots();errEl.textContent='Wrong PIN. Try again.';}
-    } else if(pinMode==='set1'){
-      pinSetting=pinBuffer;pinBuffer='';updatePinDots();
-      document.getElementById('pin-sub').textContent='Enter PIN again to confirm';
-      pinMode='set2';
-    } else if(pinMode==='set2'){
-      if(pinBuffer===pinSetting){
-        localStorage.setItem('brave_pin',pinBuffer);
-        localStorage.setItem('brave_pin_enabled','1');
-        document.getElementById('pin-overlay').style.display='none';
-        pinBuffer='';updatePinDots();pinMode='unlock';
-        renderSettings();toast('✓ PIN set successfully!');
-      } else {pinBuffer='';updatePinDots();errEl.textContent='PINs do not match. Try again.';pinMode='set1';
-        document.getElementById('pin-sub').textContent='Set a new 4-digit PIN';}
-    }
-    return;
-  } else {
-    if(pinBuffer.length<4)pinBuffer+=v;
-  }
-  updatePinDots();
-}
-function updatePinDots(){
-  for(let i=0;i<4;i++){
-    const d=document.getElementById('pd'+i);
-    d.className='pin-dot'+(i<pinBuffer.length?' filled':'');
-  }
-}
-function togglePin(){
-  const enabled=localStorage.getItem('brave_pin_enabled')==='1';
-  if(enabled){
-    localStorage.setItem('brave_pin_enabled','0');
-    localStorage.removeItem('brave_pin');
-    renderSettings();toast('PIN lock disabled');
-  } else {
-    startSetPin();
-  }
-}
-function startSetPin(){
-  pinMode='set1';pinBuffer='';updatePinDots();
-  document.getElementById('pin-sub').textContent='Set a new 4-digit PIN';
-  document.getElementById('pin-error').textContent='';
-  document.getElementById('pin-overlay').style.display='flex';
-}
-function renderSettings(){
-  const enabled=localStorage.getItem('brave_pin_enabled')==='1';
-  const t=document.getElementById('pin-toggle');
-  t.className='toggle'+(enabled?' on':'');
-  document.getElementById('pin-change-row').style.display=enabled?'':'none';
-}
-
 // ─── BACKUP & RESTORE ─────────────────────────────────────────────────────────
 function exportBackup(){
   const data=JSON.stringify({version:1,exported:new Date().toISOString(),txs});
