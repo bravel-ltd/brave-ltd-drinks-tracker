@@ -230,8 +230,11 @@ tr:hover td{background:var(--cream)}
 .chart-title{font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:500;margin-bottom:1rem}
 .bar-chart{display:flex;align-items:flex-end;gap:6px;height:160px;padding-bottom:24px;position:relative;border-bottom:1px solid var(--border)}
 .bar-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0;position:relative;height:100%}
-.bar-group{display:flex;gap:2px;align-items:flex-end;height:calc(100% - 20px);width:100%}
-.bar{border-radius:4px 4px 0 0;flex:1;min-height:2px;transition:height .4s ease}
+.bar-group{display:flex;gap:2px;align-items:flex-end;height:calc(100% - 40px);width:100%}
+.bar-wrap{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+.bar-val{font-size:9px;font-weight:600;text-align:center;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bar-val.s{color:var(--green)}.bar-val.p{color:var(--red)}.bar-val.pr{color:var(--gold-dk)}
+.bar{border-radius:4px 4px 0 0;width:100%;min-height:2px;transition:height .4s ease}
 .bar.sales{background:var(--green)}
 .bar.purchases{background:var(--red)}
 .bar.profit{background:var(--gold)}
@@ -1134,14 +1137,24 @@ function renderReports(){
   const maxVal=Math.max(...last.map(p=>Math.max(p.sales,p.purchases,1)));
   bc.innerHTML=last.map(p=>{
     const profit=p.sales-p.cogs;
-    const sh=Math.max(2,Math.round((p.sales/maxVal)*136));
-    const ph=Math.max(2,Math.round((p.purchases/maxVal)*136));
-    const prh=Math.max(2,Math.round((Math.max(0,profit)/maxVal)*136));
+    const sh=Math.max(2,Math.round((p.sales/maxVal)*120));
+    const ph=Math.max(2,Math.round((p.purchases/maxVal)*120));
+    const prh=Math.max(2,Math.round((Math.max(0,profit)/maxVal)*120));
+    const shortFmt=n=>{if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(0)+'K';return Math.round(n).toLocaleString();}
     return`<div class="bar-col">
       <div class="bar-group">
-        <div class="bar sales" style="height:${sh}px" title="Sales: ${fmtRWF(p.sales)}"></div>
-        <div class="bar purchases" style="height:${ph}px" title="Purchases: ${fmtRWF(p.purchases)}"></div>
-        <div class="bar profit" style="height:${prh}px" title="Profit: ${fmtRWF(profit)}"></div>
+        <div class="bar-wrap">
+          <div class="bar-val s">${p.sales>0?shortFmt(p.sales):''}</div>
+          <div class="bar sales" style="height:${sh}px" title="Sales: ${fmtRWF(p.sales)}"></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-val p">${p.purchases>0?shortFmt(p.purchases):''}</div>
+          <div class="bar purchases" style="height:${ph}px" title="Purchases: ${fmtRWF(p.purchases)}"></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-val pr">${profit>0?shortFmt(profit):''}</div>
+          <div class="bar profit" style="height:${prh}px" title="Profit: ${fmtRWF(profit)}"></div>
+        </div>
       </div>
       <div class="bar-label">${getPeriodLabel(p.key,reportPeriod)}</div>
     </div>`;
