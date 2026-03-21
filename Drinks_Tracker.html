@@ -538,7 +538,7 @@ tr:hover td{background:var(--cream)}
   <div class="card">
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>Date</th><th>Type</th><th>Mode</th><th>Brand</th><th>Box Type</th><th>Boxs</th><th>Bottles/Box</th><th>Total Bottles</th><th>Unit Price</th><th>Total</th><th>Notes</th><th></th></tr></thead>
+        <thead><tr><th>Date</th><th>Type</th><th>Mode</th><th>Brand</th><th>Total Boxes</th><th>Bottles per Box</th><th>Total Bottles</th><th>Unit Price</th><th>Total Price</th><th>Notes</th><th></th></tr></thead>
         <tbody id="tx-body"></tbody>
       </table>
     </div>
@@ -1039,7 +1039,7 @@ function renderInv(){
 // ─── Export CSV ───────────────────────────────────────────────────────────────
 function exportCSV(){
   if(!txs.length){toast('No transactions to export');return;}
-  const rows=[['Date','Type','Mode','Brand','Boxes','Bottles/Box','Total Bottles','Unit Price (RWF)','Total (RWF)','Notes']];
+  const rows=[['Date','Type','Mode','Brand','Total Boxes','Bottles per Box','Total Bottles','Unit Price (RWF)','Total Price (RWF)','Notes']];
   txs.forEach(t=>rows.push([t.date,t.type,t.mode,t.brand,t.boxes||'',t.bpc||'',t.qty,t.unitPrice,t.totalPrice,t.notes||'']));
   const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');
