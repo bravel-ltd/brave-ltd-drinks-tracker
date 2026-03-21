@@ -304,6 +304,34 @@ tr:hover td{background:var(--cream)}
 <button class="hamburger" onclick="toggleMenu()">☰</button>
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
+<!-- ══════════════ PIN OVERLAY ══════════════ -->
+<div class="pin-overlay" id="pin-overlay" style="display:none">
+  <div class="pin-logo">🍺</div>
+  <div class="pin-title">Brave Ltd</div>
+  <div class="pin-sub" id="pin-sub">Enter your PIN</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinPress('del')" style="font-size:14px">⌫</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinPress('ok')" style="background:var(--gold);border-color:var(--gold);font-size:13px">OK</button>
+  </div>
+</div>
+
 <aside class="sidebar" id="sidebar">
   <div class="logo">
     <div class="logo-icon">🍺</div>
@@ -566,33 +594,6 @@ tr:hover td{background:var(--cream)}
 </div>
 
 
-<!-- ══════════════ PIN OVERLAY ══════════════ -->
-<div class="pin-overlay" id="pin-overlay" style="display:none">
-  <div class="pin-logo">🍺</div>
-  <div class="pin-title">Brave Ltd</div>
-  <div class="pin-sub" id="pin-sub">Enter your PIN</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="pd0"></div>
-    <div class="pin-dot" id="pd1"></div>
-    <div class="pin-dot" id="pd2"></div>
-    <div class="pin-dot" id="pd3"></div>
-  </div>
-  <div class="pin-error" id="pin-error"></div>
-  <div class="pin-pad">
-    <button class="pin-btn" onclick="pinPress('1')">1</button>
-    <button class="pin-btn" onclick="pinPress('2')">2</button>
-    <button class="pin-btn" onclick="pinPress('3')">3</button>
-    <button class="pin-btn" onclick="pinPress('4')">4</button>
-    <button class="pin-btn" onclick="pinPress('5')">5</button>
-    <button class="pin-btn" onclick="pinPress('6')">6</button>
-    <button class="pin-btn" onclick="pinPress('7')">7</button>
-    <button class="pin-btn" onclick="pinPress('8')">8</button>
-    <button class="pin-btn" onclick="pinPress('9')">9</button>
-    <button class="pin-btn" onclick="pinPress('del')" style="font-size:14px">⌫</button>
-    <button class="pin-btn" onclick="pinPress('0')">0</button>
-    <button class="pin-btn" onclick="pinPress('ok')" style="background:var(--gold);border-color:var(--gold);font-size:13px">OK</button>
-  </div>
-</div>
 
 <!-- ══════════════ REPORTS ══════════════ -->
 <div class="panel" id="panel-reports">
@@ -1109,9 +1110,6 @@ function initPin(){
     pinMode='unlock';
     document.getElementById('pin-overlay').style.display='flex';
     document.getElementById('pin-sub').textContent='Enter your PIN to continue';
-    document.querySelector('.main').style.display='none';
-    document.querySelector('.sidebar').style.display='none';
-    document.querySelector('.hamburger').style.display='none';
   }
 }
 function pinPress(v){
@@ -1123,9 +1121,6 @@ function pinPress(v){
     if(pinMode==='unlock'){
       if(pinBuffer===localStorage.getItem('brave_pin')){
         document.getElementById('pin-overlay').style.display='none';
-        document.querySelector('.main').style.display='';
-        document.querySelector('.sidebar').style.display='';
-        document.querySelector('.hamburger').style.display='';
         pinBuffer='';updatePinDots();
       } else {pinBuffer='';updatePinDots();errEl.textContent='Wrong PIN. Try again.';}
     } else if(pinMode==='set1'){
@@ -1137,9 +1132,6 @@ function pinPress(v){
         localStorage.setItem('brave_pin',pinBuffer);
         localStorage.setItem('brave_pin_enabled','1');
         document.getElementById('pin-overlay').style.display='none';
-        document.querySelector('.main').style.display='';
-        document.querySelector('.sidebar').style.display='';
-        document.querySelector('.hamburger').style.display='';
         pinBuffer='';updatePinDots();pinMode='unlock';
         renderSettings();toast('✓ PIN set successfully!');
       } else {pinBuffer='';updatePinDots();errEl.textContent='PINs do not match. Try again.';pinMode='set1';
@@ -1172,9 +1164,6 @@ function startSetPin(){
   document.getElementById('pin-sub').textContent='Set a new 4-digit PIN';
   document.getElementById('pin-error').textContent='';
   document.getElementById('pin-overlay').style.display='flex';
-  document.querySelector('.main').style.display='none';
-  document.querySelector('.sidebar').style.display='none';
-  document.querySelector('.hamburger').style.display='none';
 }
 function renderSettings(){
   const enabled=localStorage.getItem('brave_pin_enabled')==='1';
