@@ -288,51 +288,155 @@ tr:hover td{background:var(--cream)}
 }
 
 /* ── PIN Lock ── */
-#pin-screen{position:fixed;inset:0;background:#1A1209;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;padding:2rem}
-.pin-logo{font-size:48px}
-.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:#FFF}
-.pin-sub{font-size:14px;color:rgba(255,255,255,.45);text-align:center}
-.pin-dots{display:flex;gap:14px;margin:.25rem 0}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.3);transition:all .15s}
-.pin-dot.filled{background:#C8872A;border-color:#C8872A}
-.pin-error{color:#ff6b6b;font-size:13px;min-height:18px;text-align:center}
-.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
-.pin-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#FFF;font-size:22px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
-.pin-btn:hover{background:rgba(255,255,255,.16)}
-.pin-btn:active{transform:scale(.92)}
-.pin-btn.gold{background:#C8872A;border-color:#C8872A;color:#FFF;font-size:13px;font-weight:600}
-.pin-settings-link{color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'Outfit',sans-serif}
+#pin-screen{position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#1A1209 0%,#2E1A05 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.pin-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1.25rem;width:100%;max-width:320px}
+.pin-logo{font-size:44px;line-height:1}
+.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:#FFF;letter-spacing:-.3px}
+.pin-sub{font-size:13px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5;max-width:220px}
+.pin-dots{display:flex;gap:12px;margin:.25rem 0}
+.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.25);transition:all .2s}
+.pin-dot.filled{background:#C8872A;border-color:#C8872A;transform:scale(1.15)}
+.pin-error{color:#ff6b6b;font-size:12px;min-height:16px;text-align:center}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.pin-btn{height:62px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#FFF;font-size:20px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
+.pin-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2)}
+.pin-btn:active{transform:scale(.94)}
+.pin-btn.gold{background:#C8872A;border-color:#C8872A;color:#FFF;font-size:14px;font-weight:600}
+.pin-btn.gold:hover{background:#a86920}
+/* ── Report page ── */
+.period-tabs{display:flex;gap:6px;margin-bottom:1.5rem;background:var(--surface);border-radius:12px;padding:5px;border:1px solid var(--border)}
+.period-tab{flex:1;padding:8px;border:none;background:transparent;border-radius:9px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;color:var(--muted);transition:all .18s}
+.period-tab.active{background:var(--ink);color:#FFF}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem}
+.chart-title{font-family:'Playfair Display',Georgia,serif;font-size:15px;font-weight:500;margin-bottom:1rem}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:160px;padding-bottom:24px;position:relative;border-bottom:1px solid var(--border)}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0;position:relative;height:100%}
+.bar-group{display:flex;gap:2px;align-items:flex-end;height:calc(100% - 40px);width:100%}
+.bar-wrap{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+.bar-val{font-size:9px;font-weight:600;text-align:center;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bar-val.s{color:var(--green)}.bar-val.p{color:var(--red)}.bar-val.pr{color:var(--gold-dk)}
+.bar{border-radius:4px 4px 0 0;width:100%;min-height:2px;transition:height .4s ease}
+.bar.sales{background:var(--green)}
+.bar.purchases{background:var(--red)}
+.bar.profit{background:var(--gold)}
+.bar-label{font-size:10px;color:var(--muted);position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);white-space:nowrap}
+.chart-legend{display:flex;gap:16px;margin-top:.75rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.brand-profit-row{display:flex;align-items:center;gap:12px;padding:.875rem 0;border-bottom:1px solid var(--parchment)}
+.brand-profit-row:last-child{border-bottom:none}
+.bp-name{flex:1;font-size:14px;font-weight:500}
+.bp-bar-wrap{width:140px;display:flex;align-items:center;gap:8px}
+.bp-bar{flex:1;height:6px;background:var(--parchment);border-radius:3px;overflow:hidden}
+.bp-fill{height:100%;border-radius:3px;background:var(--green)}
+.bp-fill.neg{background:var(--red)}
+.bp-val{font-size:13px;font-weight:600;white-space:nowrap;min-width:80px;text-align:right}
+.bp-val.pos{color:var(--green)}.bp-val.neg{color:var(--red)}
+.summary-table{width:100%;border-collapse:collapse;font-size:13px}
+.summary-table th{padding:8px 12px;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;border-bottom:1px solid var(--border)}
+.summary-table td{padding:10px 12px;border-bottom:1px solid var(--parchment)}
+.summary-table tr:last-child td{border-bottom:none}
+.print-btn{background:var(--ink);color:#FFF;border:none;padding:10px 20px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.print-btn:hover{opacity:.85}
+
+/* ── Settings page ── */
+.settings-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:1px solid var(--parchment)}
+.settings-row:last-child{border-bottom:none}
+.sr-label{font-size:14px;font-weight:500}
+.sr-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.sr-action{flex-shrink:0;margin-left:1rem}
+
+
+@media(max-width:768px){@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s ease}
+  .sidebar.open{transform:none}
+  .main{margin-left:0;padding:1rem;padding-top:4rem}
+  .hamburger{display:block}
+  .overlay.show{display:block}
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:.75rem}
+  .flow-row,.two-col{grid-template-columns:1fr}
+  .form-row.c4,.form-row.c3{grid-template-columns:1fr 1fr}
+  .form-row.c2{grid-template-columns:1fr 1fr}
+  .summary-banner{flex-wrap:wrap}
+  .sb-right{width:100%;text-align:left}
+  .stock-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:420px){
+  .form-row.c4,.form-row.c3,.form-row.c2{grid-template-columns:1fr}
+  .stock-grid,.box-size-row,.mode-row{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+}
+
+/* ── PIN Lock ── */
+#pin-screen{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(160deg,#1A1209 0%,#2E1A05 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:0;padding:2rem;
+}
+.pin-card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
+  padding:2.5rem 2rem;
+  display:flex;flex-direction:column;align-items:center;gap:1.25rem;
+  width:100%;max-width:320px;
+  backdrop-filter:blur(10px);
+}
+.pin-logo{font-size:44px;line-height:1}
+.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:#FFF;letter-spacing:-.3px}
+.pin-sub{font-size:13px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5;max-width:220px}
+.pin-dots{display:flex;gap:12px;margin:.25rem 0}
+.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.25);transition:all .2s}
+.pin-dot.filled{background:#C8872A;border-color:#C8872A;transform:scale(1.15)}
+.pin-error{color:#ff6b6b;font-size:12px;min-height:16px;text-align:center}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.pin-btn{
+  height:62px;border-radius:14px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  color:#FFF;font-size:20px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+  font-family:'Outfit',sans-serif;
+}
+.pin-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2)}
+.pin-btn:active{transform:scale(.94);background:rgba(255,255,255,.2)}
+.pin-btn.gold{background:#C8872A;border-color:#C8872A;color:#FFF;font-size:14px;font-weight:600}
+.pin-btn.gold:hover{background:#a86920}
+.pin-btn.del{font-size:18px}
 </style>
 </head>
 <body>
 
 <!-- ══ PIN LOCK SCREEN ══ -->
-<div id="pin-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-  <div class="pin-logo">🍺</div>
-  <div class="pin-app-name">Brave Ltd</div>
-  <div class="pin-sub" id="pin-sub">Enter your PIN to continue</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="pd0"></div>
-    <div class="pin-dot" id="pd1"></div>
-    <div class="pin-dot" id="pd2"></div>
-    <div class="pin-dot" id="pd3"></div>
+<div id="pin-screen" style="display:flex">
+  <div class="pin-card">
+    <div class="pin-logo">🍺</div>
+    <div class="pin-app-name">Brave Ltd</div>
+    <div class="pin-sub" id="pin-sub">Enter your PIN to continue</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="pin-pad">
+      <button class="pin-btn" onclick="pp('1')">1</button>
+      <button class="pin-btn" onclick="pp('2')">2</button>
+      <button class="pin-btn" onclick="pp('3')">3</button>
+      <button class="pin-btn" onclick="pp('4')">4</button>
+      <button class="pin-btn" onclick="pp('5')">5</button>
+      <button class="pin-btn" onclick="pp('6')">6</button>
+      <button class="pin-btn" onclick="pp('7')">7</button>
+      <button class="pin-btn" onclick="pp('8')">8</button>
+      <button class="pin-btn" onclick="pp('9')">9</button>
+      <button class="pin-btn del" onclick="pp('del')">⌫</button>
+      <button class="pin-btn" onclick="pp('0')">0</button>
+      <button class="pin-btn gold" onclick="pp('ok')">OK</button>
+    </div>
   </div>
-  <div class="pin-error" id="pin-error"></div>
-  <div class="pin-pad">
-    <button class="pin-btn" onclick="pp('1')">1</button>
-    <button class="pin-btn" onclick="pp('2')">2</button>
-    <button class="pin-btn" onclick="pp('3')">3</button>
-    <button class="pin-btn" onclick="pp('4')">4</button>
-    <button class="pin-btn" onclick="pp('5')">5</button>
-    <button class="pin-btn" onclick="pp('6')">6</button>
-    <button class="pin-btn" onclick="pp('7')">7</button>
-    <button class="pin-btn" onclick="pp('8')">8</button>
-    <button class="pin-btn" onclick="pp('9')">9</button>
-    <button class="pin-btn" onclick="pp('del')" style="font-size:16px">⌫</button>
-    <button class="pin-btn" onclick="pp('0')">0</button>
-    <button class="pin-btn gold" onclick="pp('ok')">OK</button>
-  </div>
-  <button class="pin-settings-link" id="pin-setup-hint" onclick="showPinSetup()" style="display:none">Set up PIN</button>
 </div>
 
 <div id="main-app" style="display:none"><button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -1284,43 +1388,45 @@ function showPinScreen(mode,msg){
   document.getElementById('main-app').style.display='none';
 }
 
+// PIN stored in Firebase so it syncs across all devices
+function getPin(cb){db.ref('app_settings/pin').once('value',s=>cb(s.val()));}
+function setPin(pin){db.ref('app_settings/pin').set(pin);}
+
 function pp(v){
   const err=document.getElementById('pin-error');
   err.textContent='';
   if(v==='del'){pinBuf=pinBuf.slice(0,-1);pinDots();return;}
   if(v==='ok'){
     if(pinBuf.length<4){err.textContent='Please enter all 4 digits';return;}
-    const stored=localStorage.getItem('brave_pin');
     if(pinMode==='create'){
-      // Creating PIN for the first time
-      localStorage.setItem('brave_pin',pinBuf);
+      setPin(pinBuf);
       showApp();
-      setTimeout(()=>toast('✓ PIN created! Use it next time you open the app.'),300);
+      setTimeout(()=>toast('✓ PIN created! Use it on any device.'),300);
     } else if(pinMode==='confirm'){
-      // Confirming new PIN during change
       if(pinBuf===window._newPin){
-        localStorage.setItem('brave_pin',pinBuf);
+        setPin(pinBuf);
         showApp();
-        setTimeout(()=>toast('✓ PIN updated successfully!'),300);
+        setTimeout(()=>toast('✓ PIN updated on all devices!'),300);
       } else {
         err.textContent='PINs do not match. Try again.';
         pinBuf='';pinDots();
       }
     } else if(pinMode==='change'){
-      // First step of change: save the new PIN temporarily, ask to confirm
       window._newPin=pinBuf;
       showPinScreen('confirm','Enter the same PIN again to confirm');
     } else {
-      // Unlock mode
-      if(!stored){
-        localStorage.setItem('brave_pin',pinBuf);
-        showApp();
-      } else if(pinBuf===stored){
-        showApp();
-      } else {
-        err.textContent='Wrong PIN. Try again.';
-        pinBuf='';pinDots();
-      }
+      // Unlock — check against Firebase
+      getPin(stored=>{
+        if(!stored){
+          setPin(pinBuf);showApp();
+        } else if(pinBuf===stored){
+          showApp();
+        } else {
+          err.textContent='Wrong PIN. Try again.';
+          pinBuf='';pinDots();
+        }
+      });
+      return; // async — return early
     }
     return;
   }
@@ -1331,16 +1437,16 @@ function changePin(){
   showPinScreen('change','Enter your new 4-digit PIN');
 }
 
-// On page load — show create or unlock screen
 function initPinScreen(){
-  const stored=localStorage.getItem('brave_pin');
-  if(!stored){
-    showPinScreen('create','Welcome! Create a 4-digit PIN to secure your app');
-  } else {
-    showPinScreen('unlock','Enter your PIN to continue');
-  }
+  getPin(stored=>{
+    if(!stored){
+      showPinScreen('create','Welcome! Create a 4-digit PIN to secure your app');
+    } else {
+      showPinScreen('unlock','Enter your PIN to continue');
+    }
+  });
 }
-// Called after Firebase connects
+
 window._pinInitDone=false;
 function maybeInitPin(){
   if(!window._pinInitDone){
