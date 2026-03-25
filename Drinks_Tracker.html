@@ -286,9 +286,55 @@ tr:hover td{background:var(--cream)}
   .stock-grid,.box-size-row,.mode-row{grid-template-columns:1fr}
   .kpi-grid{grid-template-columns:1fr 1fr}
 }
+
+/* ── PIN Lock ── */
+#pin-screen{position:fixed;inset:0;background:#1A1209;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;padding:2rem}
+.pin-logo{font-size:48px}
+.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:#FFF}
+.pin-sub{font-size:14px;color:rgba(255,255,255,.45);text-align:center}
+.pin-dots{display:flex;gap:14px;margin:.25rem 0}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.3);transition:all .15s}
+.pin-dot.filled{background:#C8872A;border-color:#C8872A}
+.pin-error{color:#ff6b6b;font-size:13px;min-height:18px;text-align:center}
+.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
+.pin-btn{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#FFF;font-size:22px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
+.pin-btn:hover{background:rgba(255,255,255,.16)}
+.pin-btn:active{transform:scale(.92)}
+.pin-btn.gold{background:#C8872A;border-color:#C8872A;color:#FFF;font-size:13px;font-weight:600}
+.pin-settings-link{color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'Outfit',sans-serif}
 </style>
 </head>
 <body>
+
+<!-- ══ PIN LOCK SCREEN ══ -->
+<div id="pin-screen">
+  <div class="pin-logo">🍺</div>
+  <div class="pin-app-name">Brave Ltd</div>
+  <div class="pin-sub" id="pin-sub">Enter your PIN to continue</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pp('1')">1</button>
+    <button class="pin-btn" onclick="pp('2')">2</button>
+    <button class="pin-btn" onclick="pp('3')">3</button>
+    <button class="pin-btn" onclick="pp('4')">4</button>
+    <button class="pin-btn" onclick="pp('5')">5</button>
+    <button class="pin-btn" onclick="pp('6')">6</button>
+    <button class="pin-btn" onclick="pp('7')">7</button>
+    <button class="pin-btn" onclick="pp('8')">8</button>
+    <button class="pin-btn" onclick="pp('9')">9</button>
+    <button class="pin-btn" onclick="pp('del')" style="font-size:16px">⌫</button>
+    <button class="pin-btn" onclick="pp('0')">0</button>
+    <button class="pin-btn gold" onclick="pp('ok')">OK</button>
+  </div>
+  <button class="pin-settings-link" id="pin-setup-hint" onclick="showPinSetup()" style="display:none">Set up PIN</button>
+</div>
+
 <button class="hamburger" onclick="toggleMenu()">☰</button>
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
@@ -1211,6 +1257,90 @@ printStyle.innerHTML=`
 }`;
 document.head.appendChild(printStyle);
 
+
+// ══ PIN LOCK ══════════════════════════════════════════════════════════════
+let pinBuf='', pinMode='unlock';
+
+function pinDots(){
+  for(let i=0;i<4;i++){
+    document.getElementById('pd'+i).className='pin-dot'+(i<pinBuf.length?' filled':'');
+  }
+}
+
+function pp(v){
+  const err=document.getElementById('pin-error');
+  err.textContent='';
+  if(v==='del'){pinBuf=pinBuf.slice(0,-1);pinDots();return;}
+  if(v==='ok'){
+    if(pinBuf.length<4){err.textContent='Please enter 4 digits';return;}
+    if(pinMode==='unlock'){
+      const stored=localStorage.getItem('brave_pin');
+      if(!stored){
+        // No PIN set yet — any 4 digits unlocks and sets it
+        localStorage.setItem('brave_pin',pinBuf);
+        unlock();
+      } else if(pinBuf===stored){
+        unlock();
+      } else {
+        err.textContent='Wrong PIN. Try again.';
+        pinBuf='';pinDots();
+      }
+    } else if(pinMode==='set'){
+      localStorage.setItem('brave_pin',pinBuf);
+      unlock();
+      toast('✓ PIN saved!');
+    }
+    return;
+  }
+  if(pinBuf.length<4){pinBuf+=v;pinDots();}
+}
+
+function unlock(){
+  document.getElementById('pin-screen').style.display='none';
+  pinBuf='';pinDots();
+}
+
+function showPinSetup(){
+  pinMode='set';
+  document.getElementById('pin-sub').textContent='Enter a new 4-digit PIN';
+  document.getElementById('pin-error').textContent='';
+  pinBuf='';pinDots();
+}
+
+function checkPinOnLoad(){
+  const stored=localStorage.getItem('brave_pin');
+  if(!stored){
+    // No PIN set yet — show setup hint
+    document.getElementById('pin-sub').textContent='No PIN set. Enter any 4 digits to create your PIN.';
+    document.getElementById('pin-setup-hint').style.display='none';
+  }
+  // PIN screen is shown by default (display:flex in HTML)
+}
+
+// Add Change PIN option in Settings
+function addChangePinToSettings(){
+  const settingsSection = document.querySelector('#panel-settings .settings-section');
+  if(!settingsSection) return;
+  const row = document.createElement('div');
+  row.className = 'settings-row';
+  row.innerHTML = `
+    <div><div class="sr-label">Change PIN</div><div class="sr-sub">Update your 4-digit access PIN</div></div>
+    <div class="sr-action"><button class="btn-sm" onclick="changePin()">Change PIN</button></div>
+  `;
+  settingsSection.appendChild(row);
+}
+
+function changePin(){
+  pinMode='set';
+  pinBuf='';pinDots();
+  document.getElementById('pin-sub').textContent='Enter your new 4-digit PIN';
+  document.getElementById('pin-error').textContent='';
+  document.getElementById('pin-screen').style.display='flex';
+}
+
+// Run on page load
+checkPinOnLoad();
+setTimeout(addChangePinToSettings, 2000);
 
 </script>
 </body>
