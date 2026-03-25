@@ -307,7 +307,7 @@ tr:hover td{background:var(--cream)}
 <body>
 
 <!-- ══ PIN LOCK SCREEN ══ -->
-<div id="pin-screen">
+<div id="pin-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
   <div class="pin-logo">🍺</div>
   <div class="pin-app-name">Brave Ltd</div>
   <div class="pin-sub" id="pin-sub">Enter your PIN to continue</div>
@@ -335,7 +335,7 @@ tr:hover td{background:var(--cream)}
   <button class="pin-settings-link" id="pin-setup-hint" onclick="showPinSetup()" style="display:none">Set up PIN</button>
 </div>
 
-<button class="hamburger" onclick="toggleMenu()">☰</button>
+<div id="main-app" style="display:none"><button class="hamburger" onclick="toggleMenu()">☰</button>
 <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
 
@@ -683,6 +683,7 @@ tr:hover td{background:var(--cream)}
 </div>
 
 </main>
+</div><!-- end main-app -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -716,6 +717,7 @@ txRef.on('value',snapshot=>{
       }
     }catch(e){}
     updateBrandSuggestions();
+    maybeInitPin();
   }
   // Refresh active panel
   const active=document.querySelector('.panel.active');
@@ -1267,80 +1269,85 @@ function pinDots(){
   }
 }
 
+function showApp(){
+  document.getElementById('pin-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  pinBuf='';pinDots();
+}
+
+function showPinScreen(mode,msg){
+  pinMode=mode||'unlock';
+  pinBuf='';pinDots();
+  document.getElementById('pin-error').textContent='';
+  document.getElementById('pin-sub').textContent=msg||'Enter your PIN to continue';
+  document.getElementById('pin-screen').style.display='flex';
+  document.getElementById('main-app').style.display='none';
+}
+
 function pp(v){
   const err=document.getElementById('pin-error');
   err.textContent='';
   if(v==='del'){pinBuf=pinBuf.slice(0,-1);pinDots();return;}
   if(v==='ok'){
-    if(pinBuf.length<4){err.textContent='Please enter 4 digits';return;}
-    if(pinMode==='unlock'){
-      const stored=localStorage.getItem('brave_pin');
-      if(!stored){
-        // No PIN set yet — any 4 digits unlocks and sets it
+    if(pinBuf.length<4){err.textContent='Please enter all 4 digits';return;}
+    const stored=localStorage.getItem('brave_pin');
+    if(pinMode==='create'){
+      // Creating PIN for the first time
+      localStorage.setItem('brave_pin',pinBuf);
+      showApp();
+      setTimeout(()=>toast('✓ PIN created! Use it next time you open the app.'),300);
+    } else if(pinMode==='confirm'){
+      // Confirming new PIN during change
+      if(pinBuf===window._newPin){
         localStorage.setItem('brave_pin',pinBuf);
-        unlock();
+        showApp();
+        setTimeout(()=>toast('✓ PIN updated successfully!'),300);
+      } else {
+        err.textContent='PINs do not match. Try again.';
+        pinBuf='';pinDots();
+      }
+    } else if(pinMode==='change'){
+      // First step of change: save the new PIN temporarily, ask to confirm
+      window._newPin=pinBuf;
+      showPinScreen('confirm','Enter the same PIN again to confirm');
+    } else {
+      // Unlock mode
+      if(!stored){
+        localStorage.setItem('brave_pin',pinBuf);
+        showApp();
       } else if(pinBuf===stored){
-        unlock();
+        showApp();
       } else {
         err.textContent='Wrong PIN. Try again.';
         pinBuf='';pinDots();
       }
-    } else if(pinMode==='set'){
-      localStorage.setItem('brave_pin',pinBuf);
-      unlock();
-      toast('✓ PIN saved!');
     }
     return;
   }
   if(pinBuf.length<4){pinBuf+=v;pinDots();}
 }
 
-function unlock(){
-  document.getElementById('pin-screen').style.display='none';
-  pinBuf='';pinDots();
+function changePin(){
+  showPinScreen('change','Enter your new 4-digit PIN');
 }
 
-function showPinSetup(){
-  pinMode='set';
-  document.getElementById('pin-sub').textContent='Enter a new 4-digit PIN';
-  document.getElementById('pin-error').textContent='';
-  pinBuf='';pinDots();
-}
-
-function checkPinOnLoad(){
+// On page load — show create or unlock screen
+function initPinScreen(){
   const stored=localStorage.getItem('brave_pin');
   if(!stored){
-    // No PIN set yet — show setup hint
-    document.getElementById('pin-sub').textContent='No PIN set. Enter any 4 digits to create your PIN.';
-    document.getElementById('pin-setup-hint').style.display='none';
+    showPinScreen('create','Welcome! Create a 4-digit PIN to secure your app');
+  } else {
+    showPinScreen('unlock','Enter your PIN to continue');
   }
-  // PIN screen is shown by default (display:flex in HTML)
 }
-
-// Add Change PIN option in Settings
-function addChangePinToSettings(){
-  const settingsSection = document.querySelector('#panel-settings .settings-section');
-  if(!settingsSection) return;
-  const row = document.createElement('div');
-  row.className = 'settings-row';
-  row.innerHTML = `
-    <div><div class="sr-label">Change PIN</div><div class="sr-sub">Update your 4-digit access PIN</div></div>
-    <div class="sr-action"><button class="btn-sm" onclick="changePin()">Change PIN</button></div>
-  `;
-  settingsSection.appendChild(row);
+// Called after Firebase connects
+window._pinInitDone=false;
+function maybeInitPin(){
+  if(!window._pinInitDone){
+    window._pinInitDone=true;
+    initPinScreen();
+  }
 }
-
-function changePin(){
-  pinMode='set';
-  pinBuf='';pinDots();
-  document.getElementById('pin-sub').textContent='Enter your new 4-digit PIN';
-  document.getElementById('pin-error').textContent='';
-  document.getElementById('pin-screen').style.display='flex';
-}
-
-// Run on page load
-checkPinOnLoad();
-setTimeout(addChangePinToSettings, 2000);
 
 </script>
 </body>
