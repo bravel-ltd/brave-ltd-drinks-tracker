@@ -289,16 +289,16 @@ tr:hover td{background:var(--cream)}
 
 /* ── PIN Lock ── */
 #pin-screen{position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#1A1209 0%,#2E1A05 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
-.pin-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;gap:1.25rem;width:100%;max-width:320px}
-.pin-logo{font-size:44px;line-height:1}
-.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:#FFF;letter-spacing:-.3px}
-.pin-sub{font-size:13px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5;max-width:220px}
-.pin-dots{display:flex;gap:12px;margin:.25rem 0}
-.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.25);transition:all .2s}
+.pin-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:3rem 2.5rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem;width:100%;max-width:400px}
+.pin-logo{font-size:56px;line-height:1;margin-bottom:.25rem}
+.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:700;color:#FFF;letter-spacing:-.3px}
+.pin-sub{font-size:14px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5;max-width:260px}
+.pin-dots{display:flex;gap:16px;margin:.5rem 0}
+.pin-dot{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.25);transition:all .2s}
 .pin-dot.filled{background:#C8872A;border-color:#C8872A;transform:scale(1.15)}
 .pin-error{color:#ff6b6b;font-size:12px;min-height:16px;text-align:center}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
-.pin-btn{height:62px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#FFF;font-size:20px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+.pin-btn{height:72px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#FFF;font-size:22px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Outfit',sans-serif}
 .pin-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2)}
 .pin-btn:active{transform:scale(.94)}
 .pin-btn.gold{background:#C8872A;border-color:#C8872A;color:#FFF;font-size:14px;font-weight:600}
@@ -384,14 +384,14 @@ tr:hover td{background:var(--cream)}
   width:100%;max-width:320px;
   backdrop-filter:blur(10px);
 }
-.pin-logo{font-size:44px;line-height:1}
-.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:#FFF;letter-spacing:-.3px}
-.pin-sub{font-size:13px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5;max-width:220px}
-.pin-dots{display:flex;gap:12px;margin:.25rem 0}
-.pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.25);transition:all .2s}
+.pin-logo{font-size:56px;line-height:1;margin-bottom:.25rem}
+.pin-app-name{font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:700;color:#FFF;letter-spacing:-.3px}
+.pin-sub{font-size:14px;color:rgba(255,255,255,.5);text-align:center;line-height:1.5;max-width:260px}
+.pin-dots{display:flex;gap:16px;margin:.5rem 0}
+.pin-dot{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.25);transition:all .2s}
 .pin-dot.filled{background:#C8872A;border-color:#C8872A;transform:scale(1.15)}
 .pin-error{color:#ff6b6b;font-size:12px;min-height:16px;text-align:center}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
 .pin-btn{
   height:62px;border-radius:14px;
   background:rgba(255,255,255,.08);
@@ -755,6 +755,15 @@ tr:hover td{background:var(--cream)}
   </div>
 
 
+
+  <!-- PIN Security -->
+  <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:500;margin-bottom:.75rem">🔒 Security</div>
+  <div class="settings-section">
+    <div class="settings-row">
+      <div><div class="sr-label">Change PIN</div><div class="sr-sub">Update your 4-digit access PIN</div></div>
+      <div class="sr-action"><button class="btn-sm" onclick="changePin()">Change PIN</button></div>
+    </div>
+  </div>
 
   <!-- Backup -->
   <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:500;margin-bottom:.75rem;margin-top:1.5rem">💾 Backup & Restore</div>
